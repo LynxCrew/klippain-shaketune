@@ -27,7 +27,7 @@ Follow these steps to install the Shake&Tune module in your printer:
   1. Be sure to have a working accelerometer on your machine. You can follow the official [Measuring Resonances Klipper documentation](https://www.klipper3d.org/Measuring_Resonances.html) to configure one. Validate with an `ACCELEROMETER_QUERY` command that everything works correctly.
   1. Install the Shake&Tune package by running over SSH on your printer:
      ```bash
-     wget -O - https://raw.githubusercontent.com/Frix-x/klippain-shaketune/main/install.sh | bash
+     wget -O - https://raw.githubusercontent.com/LynxCrew/klippain-shaketune/main/install.sh | bash
      ```
   1. Then, append the following to your `printer.cfg` file and restart Klipper (if prefered, you can include only the needed macros: using `*.cfg` is a convenient way to include them all at once):
      ```
