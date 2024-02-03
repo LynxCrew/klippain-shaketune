@@ -112,7 +112,7 @@ function copy_variables {
     if [ ! -f "${USER_CONFIG_PATH}/K-ShakeTune-Variables/${VARIABLE}.cfg" ]; then
       cp -f "${K_SHAKETUNE_PATH}/K-ShakeTune/${VARIABLE}" "${USER_CONFIG_PATH}/K-ShakeTune-Variables/${VARIABLE}.cfg"
     else
-      echo "${VARIABLE} file already exists"
+      echo "[INSTALL] ${VARIABLE} file already exists"
     fi
   done
 }
