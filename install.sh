@@ -148,7 +148,6 @@ check_download
 setup_venv
 link_extension
 copy_variables
-add_updater
 link_gcodeshellcommandpy
 restart_klipper
 restart_moonraker
