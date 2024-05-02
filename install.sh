@@ -126,17 +126,6 @@ function link_gcodeshellcommandpy {
     fi
 }
 
-function add_updater {
-    read -p " Do you want to install updater? (y/n): " answer
-    if [ "$answer" != "${answer#[Yy]}" ]; then
-        update_section=$(grep -c '\[update_manager[a-z ]* Klippain-ShakeTune\]' $MOONRAKER_CONFIG || true)
-        if [ "$update_section" -eq 0 ]; then
-            echo -n "[INSTALL] Adding update manager to moonraker.conf..."
-            cat ${K_SHAKETUNE_PATH}/moonraker.conf >> $MOONRAKER_CONFIG
-        fi
-    fi
-}
-
 function restart_klipper {
     echo "[POST-INSTALL] Restarting Klipper..."
     sudo systemctl restart klipper
