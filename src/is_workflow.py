@@ -129,6 +129,10 @@ class Config:
             help='Number of results to keep in the result folder after each run of the script',
         )
         parser.add_argument('--dpi', type=int, default=150, dest='dpi', help='DPI of the output PNG files')
+        parser.add_argument('--include_smoothers',
+                            type=bool,
+                            dest='include_smoothers',
+                            help='Defines whether input_smoothers should be graphed as well')
         parser.add_argument('-v', '--version', action='version', version=f'Shake&Tune {Config.get_git_version()}')
 
         return parser.parse_args()
@@ -244,12 +248,14 @@ class ShaperGraphCreator(GraphCreator):
 
         self._max_smoothing = None
         self._scv = None
+        self._include_smoothers = False
 
         self._setup_folder('shaper')
 
-    def configure(self, scv: float, max_smoothing: float = None) -> None:
+    def configure(self, scv: float, max_smoothing: float = None, include_smoothers: bool = False) -> None:
         self._scv = scv
         self._max_smoothing = max_smoothing
+        self._include_smoothers = include_smoothers
 
     def create_graph(self) -> None:
         if not self._scv:
@@ -266,6 +272,7 @@ class ShaperGraphCreator(GraphCreator):
             max_smoothing=self._max_smoothing,
             scv=self._scv,
             st_version=self._version,
+            include_smoothers=self._include_smoothers,
         )
         self._save_figure_and_cleanup(fig, lognames, lognames[0].stem.split('_')[-1])
 
@@ -382,7 +389,7 @@ def main():
 
     graph_creators = {
         'belts': (BeltsGraphCreator, None),
-        'shaper': (ShaperGraphCreator, lambda gc: gc.configure(options.scv, options.max_smoothing)),
+        'shaper': (ShaperGraphCreator, lambda gc: gc.configure(options.scv, options.max_smoothing, options.include_smoothers)),
         'vibrations': (
             VibrationsGraphCreator,
             lambda gc: gc.configure(options.kinematics, options.accel_used, options.chip_name, options.metadata),
