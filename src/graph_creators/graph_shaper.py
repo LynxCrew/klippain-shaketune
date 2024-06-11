@@ -63,6 +63,10 @@ def calibrate_shaper(datas, max_smoothing, scv, max_freq, include_smoothers):
 
     compat = False
     try:
+        print_with_c_locale(
+            '\n-> Include Smoothers:'
+        )
+        print_with_c_locale(include_smoothers)
         shaper, all_shapers = helper.find_best_shaper(
             calibration_data,
             shapers=None,
