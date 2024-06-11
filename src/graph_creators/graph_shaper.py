@@ -63,10 +63,6 @@ def calibrate_shaper(datas, max_smoothing, scv, max_freq, include_smoothers):
 
     compat = False
     try:
-        print_with_c_locale(
-            '\n-> Include Smoothers:'
-        )
-        print_with_c_locale(include_smoothers)
         shaper, all_shapers = helper.find_best_shaper(
             calibration_data,
             shapers=None,
@@ -310,9 +306,6 @@ def shaper_calibration(lognames, klipperdir='~/klipper', max_smoothing=None, scv
         print_with_c_locale('Warning: incorrect number of .csv files detected. Only the first one will be used!')
 
     # Compute shapers, PSD outputs and spectrogram
-    print_with_c_locale(
-        'shaper_calibration')
-    print_with_c_locale(include_smoothers)
     performance_shaper, shapers, calibration_data, fr, zeta, compat = calibrate_shaper(
         datas[0], max_smoothing, scv, max_freq, include_smoothers
     )
