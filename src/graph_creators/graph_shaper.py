@@ -410,7 +410,7 @@ def main():
         "--include_smoothers",
         type="string",
         dest="include_smoothers",
-        default=False,
+        default="False",
         help="defines whether input_smoothers should be included",
     )
     options, args = opts.parse_args()
@@ -424,12 +424,14 @@ def main():
         include_smoothers = False
     elif (
         options.include_smoothers.lower() == "true"
+        or options.include_smoothers.lower() == "yes"
         or options.include_smoothers.lower() == "y"
         or options.include_smoothers.lower() == "1"
     ):
         include_smoothers = True
     elif (
         options.include_smoothers.lower() == "false"
+        or options.include_smoothers.lower() == "no"
         or options.include_smoothers.lower() == "n"
         or options.include_smoothers.lower() == "0"
     ):
