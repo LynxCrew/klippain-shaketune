@@ -130,7 +130,7 @@ class Config:
         )
         parser.add_argument('--dpi', type=int, default=150, dest='dpi', help='DPI of the output PNG files')
         parser.add_argument('--include_smoothers',
-                            type=bool,
+                            type=int,
                             dest='include_smoothers',
                             help='Defines whether input_smoothers should be graphed as well')
         parser.add_argument('-v', '--version', action='version', version=f'Shake&Tune {Config.get_git_version()}')
