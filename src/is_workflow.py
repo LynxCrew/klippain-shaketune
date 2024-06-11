@@ -267,6 +267,9 @@ class ShaperGraphCreator(GraphCreator):
             min_files_required=1,
             custom_name_func=lambda f: f.stem.split('_')[3].upper(),
         )
+        print_with_c_locale(
+            'create_graph')
+        print_with_c_locale(self._include_smoothers)
         fig = shaper_calibration(
             lognames=[str(path) for path in lognames],
             klipperdir=str(Config.KLIPPER_FOLDER),

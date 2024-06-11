@@ -310,6 +310,9 @@ def shaper_calibration(lognames, klipperdir='~/klipper', max_smoothing=None, scv
         print_with_c_locale('Warning: incorrect number of .csv files detected. Only the first one will be used!')
 
     # Compute shapers, PSD outputs and spectrogram
+    print_with_c_locale(
+        'shaper_calibration')
+    print_with_c_locale(include_smoothers)
     performance_shaper, shapers, calibration_data, fr, zeta, compat = calibrate_shaper(
         datas[0], max_smoothing, scv, max_freq, include_smoothers
     )
@@ -444,6 +447,9 @@ def main():
         include_smoothers = False
         opts.error("invalid boolean value in --include_smoothers param")
 
+    print_with_c_locale(
+        'main')
+    print_with_c_locale(include_smoothers)
     fig = shaper_calibration(args, options.klipperdir, options.max_smoothing, options.scv, options.max_freq, include_smoothers)
     fig.savefig(options.output, dpi=150)
 
