@@ -17,8 +17,8 @@ from .accelerometer import Accelerometer
 
 
 def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
-    min_freq = gcmd.get_float('FREQ_START', default=5, minval=1)
-    max_freq = gcmd.get_float('FREQ_END', default=133.33, minval=1)
+    min_freq = gcmd.get_float('FREQ_START', default=None, minval=1)
+    max_freq = gcmd.get_float('FREQ_END', default=None, minval=1)
     hz_per_sec = gcmd.get_float('HZ_PER_SEC', default=1, minval=1)
     accel_per_hz = gcmd.get_float('ACCEL_PER_HZ', default=None)
     axis_input = gcmd.get('AXIS', default='all').lower()
@@ -46,6 +46,12 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
     if accel_per_hz is None:
         accel_per_hz = res_tester.test.accel_per_hz
     max_accel = max_freq * accel_per_hz
+
+    if min_freq is None:
+        min_freq = res_tester.test.min_freq
+
+    if max_freq is None:
+        max_freq = res_tester.test.max_freq
 
     if include_smoothers is None:
         include_smoothers = st_process.get_graph_creator()._config.include_smoothers
