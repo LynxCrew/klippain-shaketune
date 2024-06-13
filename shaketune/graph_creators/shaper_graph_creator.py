@@ -63,13 +63,19 @@ class ShaperGraphCreator(GraphCreator):
         self._max_smoothing: Optional[float] = None
         self._scv: Optional[float] = None
         self._accel_per_hz: Optional[float] = None
+        self._include_smoothers: Optional[bool] = None
 
     def configure(
-        self, scv: float, max_smoothing: Optional[float] = None, accel_per_hz: Optional[float] = None
+            self,
+            scv: float,
+            max_smoothing: Optional[float] = None,
+            accel_per_hz: Optional[float] = None,
+            include_smoothers: Optional[bool] = None,
     ) -> None:
         self._scv = scv
         self._max_smoothing = max_smoothing
         self._accel_per_hz = accel_per_hz
+        self._include_smoothers = include_smoothers
 
     def create_graph(self) -> None:
         if not self._scv:
@@ -87,6 +93,7 @@ class ShaperGraphCreator(GraphCreator):
             scv=self._scv,
             accel_per_hz=self._accel_per_hz,
             st_version=self._version,
+            include_smoothers=self._include_smoothers
         )
         self._save_figure_and_cleanup(fig, lognames, lognames[0].stem.split('_')[-1])
 
