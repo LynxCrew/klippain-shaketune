@@ -49,9 +49,11 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
 
     if min_freq is None:
         min_freq = res_tester.test.min_freq
+    ConsoleOutput.print(min_freq)
 
     if max_freq is None:
         max_freq = res_tester.test.max_freq
+    ConsoleOutput.print(max_freq)
 
     if include_smoothers is None:
         include_smoothers = st_process.get_graph_creator()._config.include_smoothers
