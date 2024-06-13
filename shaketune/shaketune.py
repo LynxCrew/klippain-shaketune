@@ -51,7 +51,6 @@ class ShakeTune:
 
         self._config = ShakeTuneConfig(result_folder_path, keep_n_results, keep_csv, dpi, include_smoothers)
         ConsoleOutput.register_output_callback(self.gcode.respond_info)
-        self._printer.register_event_handler("klippy:ready", self.handle_ready)
 
     def handle_ready(self):
         commands = [
