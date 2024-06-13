@@ -26,19 +26,13 @@ RESULTS_SUBFOLDERS = {
 
 class ShakeTuneConfig:
     def __init__(
-            self,
-            result_folder: Path = RESULTS_BASE_FOLDER,
-            keep_n_results: int = 3,
-            keep_csv: bool = False,
-            dpi: int = 150,
-            include_smoothers: bool = False,
+        self, result_folder: Path = RESULTS_BASE_FOLDER, keep_n_results: int = 3, keep_csv: bool = False, dpi: int = 150
     ) -> None:
         self._result_folder = result_folder
 
         self.keep_n_results = keep_n_results
         self.keep_csv = keep_csv
         self.dpi = dpi
-        self.include_smoothers = include_smoothers
 
         self.klipper_folder = KLIPPER_FOLDER
         self.klipper_log_folder = KLIPPER_LOG_FOLDER

@@ -63,19 +63,13 @@ class ShaperGraphCreator(GraphCreator):
         self._max_smoothing: Optional[float] = None
         self._scv: Optional[float] = None
         self._accel_per_hz: Optional[float] = None
-        self._include_smoothers: Optional[bool] = None
 
     def configure(
-            self,
-            scv: float,
-            max_smoothing: Optional[float] = None,
-            accel_per_hz: Optional[float] = None,
-            include_smoothers: Optional[bool] = None,
+        self, scv: float, max_smoothing: Optional[float] = None, accel_per_hz: Optional[float] = None
     ) -> None:
         self._scv = scv
         self._max_smoothing = max_smoothing
         self._accel_per_hz = accel_per_hz
-        self._include_smoothers = include_smoothers
 
     def create_graph(self) -> None:
         if not self._scv:
@@ -93,7 +87,6 @@ class ShaperGraphCreator(GraphCreator):
             scv=self._scv,
             accel_per_hz=self._accel_per_hz,
             st_version=self._version,
-            include_smoothers=self._include_smoothers
         )
         self._save_figure_and_cleanup(fig, lognames, lognames[0].stem.split('_')[-1])
 
@@ -114,7 +107,7 @@ class ShaperGraphCreator(GraphCreator):
 
 # Find the best shaper parameters using Klipper's official algorithm selection with
 # a proper precomputed damping ratio (zeta) and using the configured printer SQV value
-def calibrate_shaper(datas: List[np.ndarray], max_smoothing: Optional[float], scv: float, max_freq: float, include_smoothers: bool = False):
+def calibrate_shaper(datas: List[np.ndarray], max_smoothing: Optional[float], scv: float, max_freq: float):
     helper = shaper_calibrate.ShaperCalibrate(printer=None)
     calibration_data = helper.process_accelerometer_data(datas)
     calibration_data.normalize_to_frequencies()
@@ -130,7 +123,6 @@ def calibrate_shaper(datas: List[np.ndarray], max_smoothing: Optional[float], sc
         shaper, all_shapers = helper.find_best_shaper(
             calibration_data,
             shapers=None,
-            include_smoothers=include_smoothers,
             damping_ratio=zeta,
             scv=scv,
             shaper_freqs=None,
@@ -371,7 +363,6 @@ def shaper_calibration(
     max_freq: float = 200.0,
     accel_per_hz: Optional[float] = None,
     st_version: str = 'unknown',
-    include_smoothers: bool = False,
 ) -> plt.Figure:
     global shaper_calibrate
     shaper_calibrate = setup_klipper_import(klipperdir)
@@ -385,7 +376,7 @@ def shaper_calibration(
 
     # Compute shapers, PSD outputs and spectrogram
     klipper_shaper_choice, shapers, calibration_data, fr, zeta, compat = calibrate_shaper(
-        datas[0], max_smoothing, scv, max_freq, include_smoothers
+        datas[0], max_smoothing, scv, max_freq
     )
     pdata, bins, t = compute_spectrogram(datas[0])
     del datas
@@ -488,13 +479,6 @@ def main():
     opts.add_option(
         '-k', '--klipper_dir', type='string', dest='klipperdir', default='~/klipper', help='main klipper directory'
     )
-    opts.add_option(
-        "--include_smoothers",
-        type="string",
-        dest="include_smoothers",
-        default="False",
-        help="defines whether input_smoothers should be included",
-    )
     options, args = opts.parse_args()
     if len(args) < 1:
         opts.error('Incorrect number of arguments')
@@ -502,28 +486,9 @@ def main():
         opts.error('You must specify an output file.png to use the script (option -o)')
     if options.max_smoothing is not None and options.max_smoothing < 0.05:
         opts.error('Too small max_smoothing specified (must be at least 0.05)')
-    if options.include_smoothers is None:
-        include_smoothers = False
-    elif (
-        options.include_smoothers.lower() == "true"
-        or options.include_smoothers.lower() == "yes"
-        or options.include_smoothers.lower() == "y"
-        or options.include_smoothers.lower() == "1"
-    ):
-        include_smoothers = True
-    elif (
-        options.include_smoothers.lower() == "false"
-        or options.include_smoothers.lower() == "no"
-        or options.include_smoothers.lower() == "n"
-        or options.include_smoothers.lower() == "0"
-    ):
-        include_smoothers = False
-    else:
-        include_smoothers = False
-        opts.error("invalid boolean value in --include_smoothers param")
 
     fig = shaper_calibration(
-        args, options.klipperdir, options.max_smoothing, options.scv, options.max_freq, options.accel_per_hz, 'unknown', include_smoothers
+        args, options.klipperdir, options.max_smoothing, options.scv, options.max_freq, options.accel_per_hz, 'unknown'
     )
     fig.savefig(options.output, dpi=150)
 
