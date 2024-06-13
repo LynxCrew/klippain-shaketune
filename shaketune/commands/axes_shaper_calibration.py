@@ -48,7 +48,7 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
     max_accel = max_freq * accel_per_hz
 
     if include_smoothers is None:
-        include_smoothers = res_tester.test.include_smoothers
+        include_smoothers = st_process.get_graph_creator().include_smoothers
 
     # Move to the starting point
     test_points = res_tester.test.get_start_test_points()

@@ -28,6 +28,7 @@ class GraphCreator(abc.ABC):
         self._version = ShakeTuneConfig.get_git_version()
         self._type = graph_type
         self._folder = self._config.get_results_folder(graph_type)
+        self.include_smoothers = self._config.include_smoothers
 
     def _move_and_prepare_files(
         self,

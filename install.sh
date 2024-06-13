@@ -143,4 +143,3 @@ setup_venv
 link_extension
 link_module
 restart_klipper
-restart_moonraker
