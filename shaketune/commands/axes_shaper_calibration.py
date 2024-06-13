@@ -121,7 +121,6 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
         st_process.wait_for_completion()
         toolhead.dwell(1)
         toolhead.wait_moves()
-        ConsoleOutput.print('Meow')
 
     # Re-enable the input shaper if it was active
     if input_shaper is not None:
