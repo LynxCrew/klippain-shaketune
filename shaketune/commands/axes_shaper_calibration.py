@@ -39,14 +39,6 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
     res_tester = printer.lookup_object('resonance_tester')
     systime = printer.get_reactor().monotonic()
 
-    if scv is None:
-        toolhead_info = toolhead.get_status(systime)
-        scv = toolhead_info['square_corner_velocity']
-
-    if accel_per_hz is None:
-        accel_per_hz = res_tester.test.accel_per_hz
-    max_accel = max_freq * accel_per_hz
-
     if min_freq is None:
         min_freq = res_tester.test.min_freq
     ConsoleOutput.print(min_freq)
@@ -54,6 +46,14 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
     if max_freq is None:
         max_freq = res_tester.test.get_max_freq()
     ConsoleOutput.print(max_freq)
+
+    if scv is None:
+        toolhead_info = toolhead.get_status(systime)
+        scv = toolhead_info['square_corner_velocity']
+
+    if accel_per_hz is None:
+        accel_per_hz = res_tester.test.accel_per_hz
+    max_accel = max_freq * accel_per_hz
 
     if include_smoothers is None:
         include_smoothers = st_process.get_graph_creator()._config.include_smoothers

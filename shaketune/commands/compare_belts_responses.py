@@ -34,10 +34,6 @@ def compare_belts_responses(gcmd, config, st_process: ShakeTuneProcess) -> None:
     res_tester = printer.lookup_object('resonance_tester')
     systime = printer.get_reactor().monotonic()
 
-    if accel_per_hz is None:
-        accel_per_hz = res_tester.test.accel_per_hz
-    max_accel = max_freq * accel_per_hz
-
     if min_freq is None:
         min_freq = res_tester.test.min_freq
     ConsoleOutput.print(min_freq)
@@ -45,6 +41,10 @@ def compare_belts_responses(gcmd, config, st_process: ShakeTuneProcess) -> None:
     if max_freq is None:
         max_freq = res_tester.test.max_freq
     ConsoleOutput.print(max_freq)
+
+    if accel_per_hz is None:
+        accel_per_hz = res_tester.test.accel_per_hz
+    max_accel = max_freq * accel_per_hz
 
     # Configure the graph creator
     motors_config_parser = MotorsConfigParser(config, motors=None)
