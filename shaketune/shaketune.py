@@ -34,7 +34,7 @@ class ShakeTune:
     def __init__(self, config) -> None:
         self._pconfig = config
         self._printer = config.get_printer()
-        gcode = self._printer.lookup_object('gcode')
+        self.gcode = self._printer.lookup_object('gcode')
 
         res_tester = self._printer.lookup_object('resonance_tester', None)
         if res_tester is None:
@@ -45,13 +45,14 @@ class ShakeTune:
         result_folder_path = Path(result_folder).expanduser() if result_folder else None
         keep_n_results = config.getint('number_of_results_to_keep', default=3, minval=0)
         keep_csv = config.getboolean('keep_raw_csv', default=False)
-        show_macros = config.getboolean('show_macros_in_webui', default=True)
+        self.show_macros = config.getboolean('show_macros_in_webui', default=True)
         dpi = config.getint('dpi', default=150, minval=100, maxval=500)
         include_smoothers = config.getboolean('include_smoothers', default=False)
 
         self._config = ShakeTuneConfig(result_folder_path, keep_n_results, keep_csv, dpi, include_smoothers)
-        ConsoleOutput.register_output_callback(gcode.respond_info)
+        ConsoleOutput.register_output_callback(self.gcode.respond_info)
 
+    def handle_ready(self):
         commands = [
             (
                 'EXCITATE_AXIS_AT_FREQ',
@@ -82,17 +83,17 @@ class ShakeTune:
         command_descriptions = {name: desc for name, _, desc in commands}
 
         for name, command, description in commands:
-            gcode.register_command(f'_{name}' if show_macros else name, command, desc=description)
+            self.gcode.register_command(f'_{name}' if self.show_macros else name, command, desc=description)
 
         # Load the dummy macros with their description in order to show them in the web interfaces
-        if show_macros:
+        if self.show_macros:
             pconfig = self._printer.lookup_object('configfile')
             dirname = os.path.dirname(os.path.realpath(__file__))
             filename = os.path.join(dirname, 'dummy_macros.cfg')
             try:
                 dummy_macros_cfg = pconfig.read_config(filename)
             except Exception as err:
-                raise config.error(f'Cannot load Shake&Tune dummy macro {filename}') from err
+                raise self._pconfig.error(f'Cannot load Shake&Tune dummy macro {filename}') from err
 
             for gcode_macro in dummy_macros_cfg.get_prefix_sections('gcode_macro '):
                 gcode_macro_name = gcode_macro.get_name()
@@ -103,17 +104,17 @@ class ShakeTune:
                 gcode_macro.fileconfig.set(gcode_macro_name, 'description', description)
 
                 # Add the section to the Klipper configuration object with all its options
-                if not config.fileconfig.has_section(gcode_macro_name.lower()):
-                    config.fileconfig.add_section(gcode_macro_name.lower())
+                if not self._pconfig.fileconfig.has_section(gcode_macro_name.lower()):
+                    self._pconfig.fileconfig.add_section(gcode_macro_name.lower())
                 for option in gcode_macro.fileconfig.options(gcode_macro_name):
                     value = gcode_macro.fileconfig.get(gcode_macro_name, option)
-                    config.fileconfig.set(gcode_macro_name.lower(), option, value)
+                    self._pconfig.fileconfig.set(gcode_macro_name.lower(), option, value)
 
                     # Small trick to ensure the new injected sections are considered valid by Klipper config system
-                    config.access_tracking[(gcode_macro_name.lower(), option.lower())] = 1
+                    self._pconfig.access_tracking[(gcode_macro_name.lower(), option.lower())] = 1
 
                 # Finally, load the section within the printer objects
-                self._printer.load_object(config, gcode_macro_name.lower())
+                self._printer.load_object(self._pconfig, gcode_macro_name.lower())
 
     def cmd_EXCITATE_AXIS_AT_FREQ(self, gcmd) -> None:
         ConsoleOutput.print(f'Shake&Tune version: {ShakeTuneConfig.get_git_version()}')
