@@ -49,7 +49,7 @@ class ShakeTune:
         dpi = config.getint('dpi', default=150, minval=100, maxval=500)
         include_smoothers = config.getboolean('include_smoothers', default=False)
 
-        self._config = ShakeTuneConfig(result_folder_path, keep_n_results, keep_csv, dpi)
+        self._config = ShakeTuneConfig(result_folder_path, keep_n_results, keep_csv, dpi, include_smoothers)
         ConsoleOutput.register_output_callback(gcode.respond_info)
 
         commands = [

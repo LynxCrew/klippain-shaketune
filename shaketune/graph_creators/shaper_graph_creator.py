@@ -114,7 +114,7 @@ class ShaperGraphCreator(GraphCreator):
 
 # Find the best shaper parameters using Klipper's official algorithm selection with
 # a proper precomputed damping ratio (zeta) and using the configured printer SQV value
-def calibrate_shaper(datas: List[np.ndarray], max_smoothing: Optional[float], scv: float, max_freq: float, include_smoothers: bool):
+def calibrate_shaper(datas: List[np.ndarray], max_smoothing: Optional[float], scv: float, max_freq: float, include_smoothers: bool = False):
     helper = shaper_calibrate.ShaperCalibrate(printer=None)
     calibration_data = helper.process_accelerometer_data(datas)
     calibration_data.normalize_to_frequencies()
@@ -371,7 +371,7 @@ def shaper_calibration(
     max_freq: float = 200.0,
     accel_per_hz: Optional[float] = None,
     st_version: str = 'unknown',
-    include_smoothers: bool = False
+    include_smoothers: bool = False,
 ) -> plt.Figure:
     global shaper_calibrate
     shaper_calibrate = setup_klipper_import(klipperdir)
