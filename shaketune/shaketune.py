@@ -41,11 +41,11 @@ class ShakeTune:
             config.error('No [resonance_tester] config section found in printer.cfg! Please add one to use Shake&Tune.')
 
         self.timeout = config.getfloat('timeout', 300, above=0.0)
-        self.show_macros = config.getboolean('show_macros_in_webui', default=True)
         result_folder = config.get('result_folder', default='~/printer_data/config/ShakeTune_results')
         result_folder_path = Path(result_folder).expanduser() if result_folder else None
         keep_n_results = config.getint('number_of_results_to_keep', default=3, minval=0)
         keep_csv = config.getboolean('keep_raw_csv', default=False)
+        self.show_macros = config.getboolean('show_macros_in_webui', default=True)
         dpi = config.getint('dpi', default=150, minval=100, maxval=500)
         include_smoothers = config.getboolean('include_smoothers', default=False)
 
