@@ -61,7 +61,8 @@ class ShakeTuneProcess:
         # Trying to reduce Shake&Tune process priority to avoid slowing down the main Klipper process
         # as this could lead to random "Timer too close" errors when already running CANbus, etc...
         try:
-            os.nice(19)
+            param = os.sched_param(os.sched_get_priority_min(os.SCHED_BATCH))
+            os.sched_setscheduler(0, os.SCHED_BATCH, param)
         except Exception:
             ConsoleOutput.print('Warning: failed reducing Shake&Tune process priority, continuing...')
 
