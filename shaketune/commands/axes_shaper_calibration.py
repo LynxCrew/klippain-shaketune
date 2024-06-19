@@ -34,6 +34,7 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
     max_sm = gcmd.get_float('MAX_SMOOTHING', default=None, minval=0)
     feedrate_travel = gcmd.get_float('TRAVEL_SPEED', default=120.0, minval=20.0)
     z_height = gcmd.get_float('Z_HEIGHT', default=None, minval=1)
+    include_smoothers = gcmd.get_int('INCLUDE_SMOOTHERS', default=st_process._config.include_smoothers, minval=0, maxval=1)
 
     if accel_per_hz == '':
         accel_per_hz = None
@@ -71,7 +72,7 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
 
     # Configure the graph creator
     creator = st_process.get_graph_creator()
-    creator.configure(scv, max_sm, accel_per_hz)
+    creator.configure(scv, max_sm, accel_per_hz, include_smoothers)
 
     # set the needed acceleration values for the test
     toolhead_info = toolhead.get_status(systime)
@@ -119,7 +120,7 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
     # Re-enable the input shaper if it was active
     if input_shaper is not None:
         input_shaper.enable_shaping()
-    
+
     # Restore the previous acceleration values
     if old_mcr is not None: # minimum_cruise_ratio found: Klipper >= v0.12.0-239
         gcode.run_script_from_command(f'SET_VELOCITY_LIMIT ACCEL={old_accel} MINIMUM_CRUISE_RATIO={old_mcr}')
