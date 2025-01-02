@@ -868,7 +868,7 @@ class Plotter:
         ]
 
         height = 0.048 * len(table_data)
-        table = plt.table(cellText=table_data, colLabels=columns, bbox=[1.100, 0.295 + height, 0.830, height], cellLoc='center')
+        table = plt.table(cellText=table_data, colLabels=columns, bbox=[1.100, 0.775 - height, 0.830, height], cellLoc='center')
         table.auto_set_font_size(False)
         table.set_fontsize(10)
         table.auto_set_column_width([0, 1, 2, 3, 4])
