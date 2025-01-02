@@ -26,17 +26,22 @@ RESULTS_SUBFOLDERS = {
 
 class ShakeTuneConfig:
     def __init__(
-            self,
-            result_folder: Path = RESULTS_BASE_FOLDER,
-            keep_n_results: int = 3,
-            keep_csv: bool = False,
-            dpi: int = 150,
-            include_smoothers: bool = False
+        self,
+        result_folder: Path = RESULTS_BASE_FOLDER,
+        keep_n_results: int = 10,
+        keep_raw_data: bool = False,
+        chunk_size: int = 2,
+        max_freq: float = 200.0,
+        dpi: int = 150,
+        include_smoothers: bool = False,
     ) -> None:
         self._result_folder = result_folder
 
         self.keep_n_results = keep_n_results
-        self.keep_csv = keep_csv
+        self.keep_raw_data = keep_raw_data
+        self.chunk_size = chunk_size
+        self.max_freq = max_freq
+        self.max_freq_vibrations = max_freq * 5  # 1000Hz is the default (5 * 200.0)
         self.dpi = dpi
         self.include_smoothers = include_smoothers
 
