@@ -78,9 +78,10 @@ class ShakeTune:
         keep_raw_data = config.getboolean('keep_raw_data', default=DEFAULT_KEEP_RAW_DATA)
         max_freq = config.getfloat('max_freq', default=DEFAULT_MAX_FREQ, minval=100.0)
         dpi = config.getint('dpi', default=DEFAULT_DPI, minval=100, maxval=500)
+        include_smoothers = config.getboolean('include_smoothers', default=False)
         m_chunk_size = config.getint('measurements_chunk_size', default=DEFAULT_MEASUREMENTS_CHUNK_SIZE, minval=2)
         self._st_config = ShakeTuneConfig(
-            result_folder_path, keep_n_results, keep_raw_data, m_chunk_size, max_freq, dpi
+            result_folder_path, keep_n_results, keep_raw_data, m_chunk_size, max_freq, dpi, include_smoothers
         )
 
         self.timeout = config.getfloat('timeout', DEFAULT_TIMEOUT, above=0.0)
