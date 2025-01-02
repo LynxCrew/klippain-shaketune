@@ -53,11 +53,13 @@ class ShaperGraphCreator(GraphCreator):
         max_smoothing: Optional[float] = None,
         test_params: Optional[testParams] = None,
         max_scale: Optional[int] = None,
+        include_smoothers: Optional[bool] = None,
     ) -> None:
         self._scv = scv
         self._max_smoothing = max_smoothing
         self._test_params = test_params
         self._max_scale = max_scale
+        self._include_smoothers = include_smoothers
 
     def create_graph(self, measurements_manager: MeasurementsManager) -> None:
         computer = ShaperGraphComputation(
@@ -98,6 +100,7 @@ class ShaperGraphComputation:
         max_freq: float,
         max_scale: Optional[int],
         st_version: str,
+        include_smoothers: bool,
     ):
         self.measurements = measurements
         self.test_params = test_params
@@ -106,6 +109,7 @@ class ShaperGraphComputation:
         self.max_freq = max_freq
         self.max_scale = max_scale
         self.st_version = st_version
+        self.include_smoothers = include_smoothers
 
     def compute(self):
         if len(self.measurements) == 0:
@@ -124,7 +128,7 @@ class ShaperGraphComputation:
             fr,
             zeta,
             compat,
-        ) = self._calibrate_shaper(datas[0], self.max_smoothing, self.scv, self.max_freq)
+        ) = self._calibrate_shaper(datas[0], self.max_smoothing, self.scv, self.max_freq, self.include_smoothers)
         pdata, bins, t = compute_spectrogram(datas[0])
         del datas
 
@@ -241,7 +245,7 @@ class ShaperGraphComputation:
     # Find the best shaper parameters using Klipper's official algorithm selection with
     # a proper precomputed damping ratio (zeta) and using the configured printer SQV value
     # This function also sweep around the smoothing values to help you find the best compromise
-    def _calibrate_shaper(self, datas: List[np.ndarray], max_smoothing: Optional[float], scv: float, max_freq: float):
+    def _calibrate_shaper(self, datas: List[np.ndarray], max_smoothing: Optional[float], scv: float, max_freq: float, include_smoothers: bool):
         shaper_calibrate, shaper_defs = get_shaper_calibrate_module()
         calib_data = shaper_calibrate.process_accelerometer_data(datas)
         calib_data.normalize_to_frequencies()
@@ -257,6 +261,7 @@ class ShaperGraphComputation:
             k_shaper_choice, k_shapers = shaper_calibrate.find_best_shaper(
                 calib_data,
                 shapers=None,
+                include_smoothers=include_smoothers,
                 damping_ratio=zeta,
                 scv=scv,
                 shaper_freqs=None,

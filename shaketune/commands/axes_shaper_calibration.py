@@ -119,7 +119,7 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
         ConsoleOutput.print(f'{config["axis"].upper()} axis frequency profile generation...')
         ConsoleOutput.print('This may take some time (1-3min)')
         measurements_manager.wait_for_data_transfers(printer.get_reactor())
-        st_process.get_graph_creator().configure(scv, max_sm, test_params, max_scale)
+        st_process.get_graph_creator().configure(scv, max_sm, test_params, max_scale, include_smoothers)
         st_process.run(measurements_manager)
         st_process.wait_for_completion()
         toolhead.dwell(1)
