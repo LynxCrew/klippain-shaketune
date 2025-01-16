@@ -107,7 +107,7 @@ def compare_belts_responses(gcmd, config, st_process: ShakeTuneProcess) -> None:
 
     # Run the test for each axis
     for config in filtered_config:
-        toolhead.manual_move(point, self.move_speed)
+        toolhead.manual_move(point, feedrate_travel)
         toolhead.dwell(0.5)
         toolhead.wait_moves()
         ConsoleOutput.print(f'Measuring {config["label"]}...')
