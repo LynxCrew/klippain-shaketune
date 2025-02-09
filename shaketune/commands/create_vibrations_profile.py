@@ -79,6 +79,7 @@ def create_vibrations_profile(gcmd, config, st_process: ShakeTuneProcess) -> Non
     # Going to the start position
     toolhead.move([X, Y, z_height, E], feedrate_travel / 10)
     toolhead.move([mid_x - 15, mid_y - 15, z_height, E], feedrate_travel)
+    printer.lookup_object("gcode_move").last_position = [mid_x - 15, mid_y - 15, z_height, E]
     toolhead.dwell(0.5)
 
     measurements_manager = MeasurementsManager(st_process.get_st_config().chunk_size)
